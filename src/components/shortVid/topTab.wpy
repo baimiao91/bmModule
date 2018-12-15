@@ -1,0 +1,81 @@
+<style lang='less' scoped>
+	.tab-item {
+		width:138rpx;
+		display:inline-block;
+		height:80rpx;
+		line-height:80rpx;
+		box-sizing:border-box;
+		text-align:center;
+		white-space:nowrap;
+		font-weight:bold;
+		&.native {
+			color:rgb(255,110,0);
+			position:relative;
+			pointer-events: none;
+			&:after {
+				content:'';
+				width:30rpx;
+				height:6rpx;
+				background:rgb(255,110,0);
+				border-radius:10rpx;
+				position:absolute;
+				left:54rpx;
+				bottom:10rpx;
+			}
+		}
+	}
+</style>
+
+<template>
+    <view class="tab-item {{deftInd === ind ? 'native' : ''}}" @tap="changeData({{ind}},{{datas.channelItemId}})">
+    	{{datas.channelName}}
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+
+        props = {
+        	datas:{
+        		type:null
+        	},
+        	deftInd:{
+        		type:null
+        	},
+        	ind:{
+        		type:null
+        	}
+        };
+
+        data = {
+            
+        };
+
+        components = {
+
+        };
+
+        methods = {
+			changeData:(ind,ItemId)=>{
+				// console.log('dj的ind',ind,'---',ItemId);
+				this.$emit('changeList',{ind,ItemId});
+			}
+        };
+
+        computed = {
+
+        };
+
+        onLoad() {
+            
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

@@ -1,0 +1,52 @@
+<style lang='less'>
+
+</style>
+
+<template>
+    <view>组件-search</view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+
+        props = {
+        	
+        };
+
+        data = {
+            
+        };
+
+        components = {
+
+        };
+
+        methods = {
+
+        };
+
+        events = {
+
+        };
+
+        watch = {
+
+        };
+
+        computed = {
+
+        };
+
+        onLoad() {
+            
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

@@ -1,0 +1,145 @@
+<style lang='less'>
+	.lists-container {
+		width:100%;
+		height:auto;
+		overflow:hidden;
+	}
+	.title-con {
+        width:100%;
+        height:80rpx;
+        line-height:80rpx;
+        font-size:36rpx;
+        font-weight:bolder;
+    }
+    .item-wrapper {
+    	width:100%;
+    	height:auto;
+    	padding-top:20rpx;
+    	box-sizing:border-box;
+    	display:flex;
+    	flex-wrap:wrap;
+    	.list-item {
+    		width:50%;
+    		padding:0 8rpx;
+    		box-sizing:border-box;
+    		margin-top:12rpx;
+    		.item-content {
+    			width:100%;
+    			height:auto;
+    		}
+    	}
+    }
+    .item-content {
+    	.imgTag {
+    		position:relative;
+    		.tags {
+	    		padding:0 3rpx;
+	    		font-size:24rpx;
+	    		position:absolute;
+	    		background:rgba(162,162,182,0.5);
+	    		right:10rpx;
+	    		bottom:10rpx;
+	    		color:#fff;
+	    		&.timelong {
+	    			width:130rpx;
+	    			white-space: nowrap;
+	    			padding:0 10rpx;
+	    			overflow:hidden;
+	    		}
+	    	}
+	    	.movie-img {
+	    		width:100%;
+	    		height:190rpx;
+	    		display:block;
+	    	}
+    	}
+		.itm-title {
+			font-size:30rpx;
+		}    	
+    }
+</style>
+
+<template>
+   	<view class="lists-container">
+        <view
+            wx:for="{{datas}}"
+            wx:key="{{index}}"
+            class="video-cont"
+            wx:if="{{index !== 0 && index !== 2 && item.cms_data.title !== ''}}"
+        >
+            <view class="title-con">{{item.cms_data.ZT_leaf_head}}</view>
+            <view class="item-wrapper">
+            	<view
+	            	wx:for="{{item.list}}"
+	            	wx:key="{{index}}"
+	            	class="list-item"
+	            	@tap="detailHref({{item}})"
+	            >
+	            	<view class="item-content" id="{{index}}">
+	            		<view class="imgTag">
+	            			<image wx:if="{{item.cms_data.cms_pic_ori}}" src="{{item.cms_data.cms_pic_ori}}" class="movie-img"></image>
+		            		<image wx:elif="{{!item.cms_data.cms_pic_ori}}" src="{{item.data.image_url}}" class="movie-img"></image>
+		            		<view class="tags" wx:if="{{item.cms_data.timelong === '' && item.cms_data.ctype === 'album'}}">{{item.cms_data.score}}</view>
+		            		<view class="tags timelong" wx:elif="{{item.cms_data.timelong === '' && item.cms_data.ctype === 'dbIDAlbum' && item.cms_data.type === '10'}}">{{item.cms_data.publishdate}}</view>
+		            		<view class="tags" wx:elif="{{!item.cms_data.timelong && item.cms_data.ctype === 'program'}}">{{item.cms_data.title}}</view>
+		            		<view class="tags" wx:elif="{{item.cms_data.timelong !== ''}}">{{item.cms_data.timelong}}</view>
+		            		<view class="tags timelong" wx:if="{{item.cms_data.timelong === '' && item.cms_data.ctype === 'album' && !item.cms_data.type === '10'}}">{{item.cms_data.publishdate}}</view>
+		            		<view class="tags" wx:elif="{{!item.cms_data.timelong}}">{{this.computed.msg(item.cms_data.score)}}</view>
+	            		</view>
+						<view class="itm-title" wx:if="{{item.cms_data.title}}">{{item.cms_data.title}}</view>
+						<view class="itm-title" wx:if="{{!item.cms_data.title}}">{{item.data.title}}</view>
+	            	</view>
+	            </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import {connect} from 'wepy-redux';
+
+    @connect({
+        datas(store) {
+            return store.counter.ace_data
+        }
+    },{
+    })
+
+    export default class Index extends wepy.component {
+
+        props = {
+        };
+
+        data = {
+            
+        };
+
+        components = {
+
+        };
+
+        methods = {
+			detailHref:(data) => {
+				this.$emit('getDetail',data.itemId);
+			},
+			msg(obj) {
+				console.log(obj,'obj-methods');
+			}
+        };
+
+        computed = {
+        	
+        };
+
+        onLoad() {
+            // console.log(this,'lists.wpy');
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

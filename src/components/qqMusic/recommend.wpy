@@ -1,0 +1,131 @@
+<style lang='less'>
+    .recommend-container {
+        width:100%;
+        height:100%;
+    }
+	.swiper-container {
+		width:100%;
+		height:350rpx;
+	}
+	.swiperImg {
+		width:100%;
+		height:100%;
+	}
+	.radio-con {
+		width:100%;
+		height:auto;
+		padding:0 20rpx;
+		box-sizing:border-box;
+		.title {
+			width:100%;
+			height:70rpx;
+			line-height:70rpx;
+		}
+		.contRadio {
+			width:100%;
+			height:auto;
+			display:flex;
+			justify-content:space-between;
+			align-item:center;
+			.radion-item {
+				width:49%;
+				heigth:auto;
+			}
+		}
+	}
+	.imgCon {
+		width:100%;
+		height:350rpx;
+		.radio-img {
+			width:100%;
+			height:100%;
+			display:block;
+		}
+	}
+	.textCon {
+		width:100%;
+		height:80rpx;
+		text-indent:16rpx;
+		background:rgb(255,255,255);
+	}
+</style>
+
+<template>
+    <view class="recommend-container">
+    	<swiper 
+    		indicator-dots="true"
+    		autoplay="true"
+    		indicator-color="#93887b"
+    		indicator-active-color="#ffffff"
+    		circular="true"
+    		class="swiper-container"
+    	>
+    		<block wx:for="{{recommendBanner}}" wx:key="{{index}}">
+    			<swiper-item>
+    				<image src="{{item.picUrl}}" class="slide-image" class="swiperImg"/>
+    			</swiper-item>
+    		</block>
+    	</swiper>
+    	<view class="radio-con">
+    		<view class="title">电台</view>
+    		<view class="contRadio">
+    			<block wx:for="{{recommendRadio}}" wx:key="{{index}}">
+    				<view class="radion-item">
+    					<view class="imgCon">
+    						<image src="{{item.picUrl}}" class="radio-img" />
+    					</view>
+    					<view class="textCon">{{item.Ftitle}}</view>
+    				</view>
+    			</block>
+    		</view>
+    	</view>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import { connect } from 'wepy-redux';
+
+    @connect({
+        recommendBanner(store){
+            return store.counter.mQmusicRecommendBanner
+        },
+        recommendRadio(store) {
+        	return store.counter.mQmusicRecommendRadioList
+        }
+    },{
+        
+    })
+
+    export default class Index extends wepy.component {
+
+        props = {
+        	
+        };
+
+        data = {
+            
+        };
+
+        components = {
+
+        };
+
+        methods = {
+
+        };
+
+        computed = {
+
+        };
+
+        onLoad() {
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

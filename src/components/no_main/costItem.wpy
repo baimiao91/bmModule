@@ -1,0 +1,59 @@
+<style lang='less'>
+	.cost-container {
+		width:100%;
+		height:100rpx;
+		line-height:100rpx;
+		background:#eee;
+	}
+</style>
+
+<template>
+    <view class="cost-container">
+    	<view 
+    		class="itms"
+    		wx:for="{{items}}"
+    		wx:key="{{index}}"
+    	>
+    		{{index}}
+    	</view>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+
+        props = {
+        	items:{
+        		type:null
+        	}
+        };
+
+        data = {
+            
+        };
+
+        components = {
+
+        };
+
+        methods = {
+
+        };
+
+        computed = {
+
+        };
+
+        onLoad() {
+            console.log('datas',this);
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

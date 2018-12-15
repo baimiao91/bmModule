@@ -1,0 +1,153 @@
+<style lang="less">
+    .dec-week-container {
+        width:100%;
+        height:100%;
+        background:#eee;
+        font-size:32rpx;
+        .other-cont {
+            width:100%;
+            height:100%;
+            position:relative;
+            .tab-con {
+                width:60%;
+                height:100rpx;
+                text-align:center;
+                margin:auto;
+            }
+        }
+    }
+    .tab-item {
+        width:45%;
+        height:80rpx;
+        line-height:80rpx;
+        display:inline-block;
+        background:transparent;
+        border-radius:10rpx;
+        margin:10rpx 0;
+    }
+    .active {
+        background:#f00;
+        color:#fff;
+        transition:all .5s;
+    }
+    .content-sess {
+        width:100%;
+        height:auto;
+        overflow:hidden;
+        box-sizing:border-box;
+        padding-top:120rpx;
+    }
+    .bottom-con {
+        width:100%;
+        height:100rpx;
+        position:absolute;
+        bottom:0;
+        right:0;
+        left:0;
+        vertical-align:middle;
+        .offer-money {
+            width:90%;
+            height:90rpx;
+            line-height:80rpx;
+            text-align:center;
+            padding:10rpx 40rpx;
+            box-sizing:border-box;
+            border-radius:10rpx;
+            background:#f00;
+            color:#fff;
+            margin:auto;
+        }
+    }
+</style>
+
+<template>
+   	<view class="dec-week-container">
+        <view class="other-cont">
+            <view class="tab-con">
+                <view 
+                    wx:for="{{allObj}}"
+                    wx:key="{{index}}"
+                    wx:if="{{index === moneyKey}}"
+                    class="tab-item {{index === defaultKey ? 'active' : ''}}"
+                    @tap="changeDetail({{moneyKey}})"
+                >提现</view>
+                <view 
+                    wx:for="{{allObj}}"
+                    wx:key="{{index}}"
+                    wx:if="{{index === logKey}}"
+                    class="tab-item {{index === defaultKey ? 'active' : ''}}"
+                    @tap="changeDetail({{logKey}})"
+                >记录</view>
+            </view>
+            <view class="content-sess">
+                <Content :datas.sync="defaultObj" wx:if="{{defaultKey === moneyKey}}" />
+                <ContentLog :datas.sync="allObj" :keys.sync="logKey" wx:if="{{defaultKey === logKey}}" />
+            </view>
+
+            <view class="bottom-con">
+                <view class="offer-money">立即提现</view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import Content from '../components/no_main/content';
+    import ContentLog from '../components/no_main/contentLog';
+
+    export default class Example extends wepy.page {
+        
+        config = {
+            navigationBarTitleText:'个人中心'
+        };
+
+        data = {
+           	moneyKey:'money',
+            logKey:'log',
+            allObj:{},
+            defaultKey:'money',
+            defaultObj:{}
+        };
+
+        components = {
+            Content,
+            ContentLog
+        };
+
+        methods = {
+            changeDetail:(data) => {
+                this.defaultKey = data;
+                this.$apply();
+            }
+        };
+
+		events = {
+
+		};
+
+		computed = {
+
+		};
+
+        onLoad() {
+            wepy.request({
+                url:'http://169.254.188.98:8080/mock/data_work.json',
+                success:(res) => {
+                    let obj = res.data.data;
+                    console.log('全部的obj',obj);
+                    this.allObj = obj;
+                    this.defaultObj = obj.money;
+                    this.$apply();
+                }
+            })
+        };
+
+        onShow() {
+
+        };
+
+    }
+
+</script>

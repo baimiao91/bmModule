@@ -1,0 +1,191 @@
+<style lang="less">
+    .index-container {
+        width:100%;
+        height:100%;
+        box-sizing:border-box;
+    }
+    .other-con {
+        width:100%;
+        height:auto;
+        padding-bottom:40rpx;
+        position:relative;
+    }
+    .video-cont {
+        width:100%;
+        height:auto;
+        box-sizing:border-box;
+        padding:0 30rpx;
+    }
+    .input-con {
+        width:100%;
+        height:80rpx;
+        padding:0 30rpx;
+        box-sizing:border-box;
+        font-size:32rpx;
+        padding-bottom:10rpx;
+        display:flex;
+        align-items:center;
+        color:rgb(166,166,171);
+    }
+    .icon-search {
+        width:40rpx;
+        height:40rpx;
+        margin-right:10rpx;
+        .icon-imgresponse {
+            width:100%;
+            height:100%;
+            display:block;
+        }
+    }
+    .scroll-container {
+        width:100%;
+    }
+    ::-webkit-scrollbar {
+        display:none;
+    }
+</style>
+
+<template>
+    <view class="index-container">
+        <!-- <video src="https://ugcws.video.gtimg.com/uwMRJfz-r5jAYaQXGdGnC2_ppdhgmrDlPaRvaV7F2Ic/g07248ij7a9.mp4?sdtfrom=v3010&guid=1583ce8c336208f38382d01881174e08&vkey=CB89018FCCE3ED0AED837564575FDAEF7E8ECDCC4BF9FB5A4E9C64EB6037CF10FEF0238428F536DCC3F0B230D9F559D1AC9243DB6F7CF97CD0D9536E9F87FB3F4D5BC7EF24E9D5F781C2EFFC02E8E424D83811AA282FF37F4BFDB92FC0D9334FA654BAF77FA787DA1FC5CD1984A9B570234CC63AC85E2849&platform=2"></video> -->
+        <scroll-view scroll-y class="scroll-container" @scroll="getScroll" style="height:3110px">
+            <view class="other-con">
+                <view class="input-con" @tap="showSearch">
+                    <view class="icon-search"><image src="../assets/icon/search-red.png" class="icon-imgresponse" /></view>
+                    <view class="search-ipt">请输入片名、主演或导演</view>
+                </view>
+                <Banner />
+                <lists @getDetail.user="hrefDetail" />
+                <searchBefore wx:if="{{flagSearch === 'true'}}" @closeSearch.user="closeSearch" />
+            </view> 
+        </scroll-view>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import {connect} from 'wepy-redux';
+    import {
+        getTencentVideo,
+        addTencentVideo
+    } from '../store/actions/counter.js';
+    import Banner from '../components/index/banner';
+    import lists from '../components/index/lists';
+    import searchBefore from '../components/index/serach_before';
+
+    @connect({
+        datas(store) {
+            return store.counter.ace_data
+        },
+        bannerData(store) {
+            return store.counter.banner_data
+        }
+    },{
+        getTencentVideo,
+        addTencentVideo
+    })
+
+    export default class Example extends wepy.page {
+
+        config = {
+            enablePullDownRefresh:true,
+            onReachBottomDistance:50
+        };
+
+        data = {
+            flagSearch:'false',
+            defaultCid:'',
+            defaultPage:1
+        };
+
+        components = {
+            Banner,
+            lists,
+            searchBefore
+        };
+
+        methods = {
+            showSearch:() => {
+                this.flagSearch = 'true';
+                this.$apply();
+            },
+            closeSearch:()=>{
+                this.flagSearch = 'false';
+                this.$apply();
+            },
+            getScroll:(e)=>{
+                // console.log('e',e);
+            },
+            hrefDetail:(vid)=>{
+                console.log('详情配置的id',vid);
+                wepy.navigateTo({
+                    url:'/pages/detail?id='+vid
+                })
+                // this.$apply();
+            }
+        };
+
+        computed = {
+            newDate() {
+                return ''+ new Date()*1+'';
+            },
+            newCid() {
+                return `${this.defaultCid}`
+            },
+            newString() {
+                return Math.random().toString(36).slice(-4)
+            },
+            newPage() {
+                return this.defaultPage;
+            },
+            newDetDate() {
+                let date = new Date(),
+                    year = new Date().getFullYear(),
+                    month = new Date().getMonth() + 1,
+                    day = new Date().getDate(),
+                    hours = new Date().getHours(),
+                    minutes = new Date().getMinutes(),
+                    seconds = new Date().getSeconds();
+                if( month < 10 ) {
+                    month = '0'+month;
+                }
+                if( day < 10 ) {
+                    day = '0'+day;
+                }
+                return ''+year+month+day+hours+minutes+seconds
+            }
+        };
+
+        onLoad() {
+            this.methods.getTencentVideo(`https://access.video.qq.com/tinyapp/channel_data?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3&seqNum=4f91140e6b9384ea_${this.newDate}_${this.newString}&channelId=100101&modNum=10&pageContext=`);
+            // console.log('index-this',wepy);
+        };
+
+        onShow() {
+            wepy.request({
+                url:'https://service.dandelion.youku.com/weixin/v1/pageById?pageId=0&openId=oIny84vZWiTtm2W2fnrpZijkFMa8&_timestamp=1544356797200&sign=c0b1f398e5e6d040d2e178906c35d03b',
+                success:res=>{
+                    console.log('优酷-res',res.data);
+                }
+            });
+            
+        };
+
+        onReady() {
+
+        }
+
+        onReachBottom() {
+            this.defaultPage++;
+            this.methods.addTencentVideo(`https://access.video.qq.com/tinyapp/channel_data?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3&seqNum=4f91140e6b9384ea_${this.newDate}_${this.newString}&channelId=100101&modNum=10&pageContext=page=${this.newPage}&cms=0&rec=${this.newPage * 8}&modidx=${this.newPage * 8}&lastTagId=${this.newDetDate}&lastTagType=0&last_page_pos=${this.newPage * 10 }`);
+            this.$apply();
+        }
+
+        onTabItemTap() {
+            console.log('我都在了，还动我干嘛');
+        }
+
+    }
+
+</script>

@@ -1,0 +1,150 @@
+<style lang='less'>
+	.question-container {
+		width:100%;
+		height:auto;
+        position:relative;
+        z-index:99;
+		background:#fff;
+		border-bottom:1px solid #eee;
+        box-sizing:border-box;
+		.titile {
+			position:relative;
+            width:100%;
+            height:100rpx;
+            line-height:100rpx;
+            padding:0 40rpx;
+            box-sizing:border-box;
+            z-index:99;
+            background:#fff;
+			.rightIcon {
+				width:40rpx;
+				height:40rpx;
+				position:absolute;
+				right:40rpx;
+				top:30rpx;
+				.iconImg {
+					width:100%;
+					height:100%;
+					display:block;
+				}
+			}
+            .money {
+                height:40rpx;
+                line-height:40rpx;
+                position:absolute;
+                right:100rpx;
+                top:30rpx;
+            }
+		}
+	}
+    .cost-container {
+        width:100%;
+        background:#eee;
+        box-sizing:border-box;
+        -webkit-animation-timing-function: ease;
+        -webkit-animation-duration: 1.5s;
+        -webkit-animation-direction: alternate;
+    }
+    @-webkit-keyframes fadeInOut {
+        0% {
+            opacity:0;
+        }
+        25% {
+            opacity:0;
+        }
+        50% {
+            opacity:0.5;    
+        }
+        75% {
+            opacity:1;
+        }
+    }
+    
+</style>
+
+<template>
+    <view class="question-container">
+    	<view class="titile">
+    		{{datas.name}}
+    		<view class="rightIcon" >
+    			<image src="../../assets/icon/sjt.png" class="iconImg" wx:if="{{datas.flag}}" @tap="showMore" />
+                <image src="../../assets/icon/xjt.png" class="iconImg" wx:else @tap="closeMore" />
+    		</view>
+            <view class="money">{{datas.price}}</view>
+    	</view>
+        <view style="height:{{datas.flag ? '0' : 'auto'}};padding:{{datas.flag ? '0px' : '40rpx'}};-webkit-animation-name:{{datas.flag ? '' : ' fadeInOut'}};" class="cost-container">
+            <view 
+                wx:for="{{datas.datas}}"
+                wx:key="{{index}}"
+            >
+                <view class="otime">{{index}}</view>
+                <view
+                    wx:for="{{item}}"
+                    wx:key="{{index}}"
+                    wx:for-item="val"
+                >
+                    {{val.content}}---------{{val.price}}
+                </view>
+            </view>
+        </view>
+        
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    // import ConstItem from './costItem';
+
+    export default class Index extends wepy.component {
+
+        props = {
+        	datas:{
+        		type:Object,
+        		value:{},
+                twoWay:true
+        	}
+        };
+
+        data = {
+            deftName:[]
+        };
+
+        components = {
+            // ConstItem
+        };
+
+        methods = {
+            showMore:() => {
+                this.datas.flag = false;
+                this.$apply();
+                // console.log('点击的名字',this);
+            },
+            closeMore:()=>{
+                this.datas.flag = true;
+                this.$apply();
+            }
+        };
+
+        events = {
+
+        };
+
+        watch = {
+
+        };
+
+        computed = {
+
+        };
+
+        onLoad() {
+            
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

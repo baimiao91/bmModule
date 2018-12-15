@@ -1,0 +1,197 @@
+<style lang="less">
+    .rankList-det {
+    	width:100%;
+    	height:auto;
+    	font-size:30rpx;
+    	.songs-container {
+    		width:100%;
+    		heigth:auto;
+    		.song-item {
+    			display:flex;
+    			align-items:center;
+    		}
+    	}
+    }
+    .song-item {
+    	width:100%;
+    	heigth:100rpx;
+    	.s-ind {
+			width:120rpx;
+			height:100rpx;
+			line-height:100rpx;
+			text-align:center;
+			flex-shrink:0;
+    	}
+    	.s-info {
+			flex:1;
+			width:100%;
+			height:100rpx;
+			padding:10rpx 20rpx;
+			box-sizing:border-box;
+			.s-name {
+				width:100%;
+		        font-size:32rpx;
+			}
+			.singer-name {
+				max-width:84%;
+				font-size:24rpx;
+				font-style: normal;
+			    font-variant-ligatures: normal;
+			    font-variant-caps: normal;
+			    font-variant-numeric: normal;
+			    font-variant-east-asian: normal;
+			}
+    	}
+    }
+    .s-name,
+    .singer-name {
+    	overflow : hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        word-break:break-all;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+    .orange {
+    	color:rgb(255,129,94);
+    }
+    .songsNum {
+    	height:70rpx;
+    	line-height:70rpx;
+    	padding:0 40rpx;
+    	box-sizing:border-box;
+    }
+</style>
+
+<template>
+   	<view class="rankList-det">
+   		<view class="topInfo">
+   			<view class="incoMain">
+   				<view class="infoImg">
+   					<image src="https://y.gtimg.cn/music/photo_new/T002R300x300M000{{topInfo.data.albummid}}.jpg?max_age=2592000" lazy-load="true" />
+   				</view>
+   			</view>
+   		</view>
+   		<view class="songs-lists">
+   			<view class="songsNum">排行榜 共{{songsNum}}首</view>
+	   		<view class="songs-container">
+	   			<repeat for="{{songsList}}">
+	   				<view class="song-item">
+	   					<view class="s-ind {{index < 3 ? 'orange' : ''}}">{{index + 1}}</view>
+	   					<view class="s-info" @tap="getSongMedia({{item.data.strMediaMid}})">
+	   						<view class="s-name ">{{item.data.songname}}</view>
+	   						<view class="singer-name">
+	   							<block wx:for="{{item.data.singer}}" wx:key="{{index}}" wx:for-item="itm">
+	   								<text>{{itm.name}} </text>
+	   							</block>
+	   						</view>
+	   					</view>
+	   				</view>
+	   			</repeat>
+	   		</view>
+	   	</view>
+   	</view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import {connect} from 'wepy-redux';
+    import {
+        getQmusicMsimulationRanklistTodet
+    } from '../store/actions';
+
+    @connect({
+       	songsNum(store) {
+       		return store.counter.mQmusicRanklistDetSongsNum
+       	},
+       	songsList(store) {
+       		return store.counter.mQmusicRanklistDetSongsList
+       	},
+       	topInfo(store) {
+       		return store.counter.mQmusicRankDetTopInfo_0
+       	}
+    },{
+        getQmusicMsimulationRanklistTodet
+    })
+
+    export default class Example extends wepy.page {
+        
+        config = {
+        };
+
+        data = {
+           	topid:4,
+           	src:'',
+           	poster:'https://y.gtimg.cn/music/photo_new/T002R300x300M0000009X2zr42vhaU.jpg?max_age=2592000',
+           	name: '月牙湾',
+    		author: '飞儿乐团',
+        };
+
+        components = {
+
+        };
+
+        methods = {
+			getSongMedia:(mid) => {
+				console.log('itm--',mid);
+				wepy.request({
+					url:`http://api.onecolour.cn/music/https://y.qq.com/n/yqq/song/${mid}.html`,
+					success:res => {
+						console.log('res--mid',res);
+						let datas = res.data.datas[0].link;
+						if( res.data.datas[0].code === -1 ) {
+							wepy.showToast({
+								title: '努力调试接口中',
+								icon:'loading',
+								duration:1500
+							})
+						} else {
+							console.log('播放地址--',datas['320mp3']);
+							const innerAudioContext = wx.createInnerAudioContext();
+							innerAudioContext.src = datas['320mp3'];
+							innerAudioContext.autoplay = true;
+						}
+						
+					}
+				})
+			}
+        };
+
+		events = {
+
+		};
+
+		watch = {
+
+		};
+
+		computed = {
+			newTopId() {
+				return this.topid
+			},
+			newSongListUrl() {
+				return `https://c.y.qq.com/v8/fcg-bin/fcg_v8_toplist_cp.fcg?g_tk=5381&uin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=h5&needNewCode=1&tpl=3&page=detail&type=top&topid=${this.newTopId}&_=${new Date() * 1}`
+			}
+		};
+
+        onLoad(options) {
+        	wepy.setNavigationBarTitle({
+        		title:options.oNam
+        	})
+			this.topid = options.oid;
+			this.$apply();
+			this.methods.getQmusicMsimulationRanklistTodet(this.newSongListUrl);
+        };
+
+        onShow() {
+
+        };
+
+        onReady() {
+        	
+        };
+
+    }
+
+</script>

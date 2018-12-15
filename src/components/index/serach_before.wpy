@@ -1,0 +1,265 @@
+<style lang='less'>
+	.search-container {
+		width:100%;
+		height:100%;
+		position:absolute;
+		left:0;
+		top:0;
+		right:0;
+		z-index:999;
+		background:rgb(253,253,253);
+		-webkit-animation-name: fadeIn;
+		-webkit-animation-duration: 1.5s;
+	}
+	@-webkit-keyframes fadeIn {
+		0% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+	.search-session {
+		width:100%;
+		height:100%;
+		.input-cont {
+			width:100%;
+			height:auto;
+			padding-bottom:10rpx;
+			background:rgb(253,253,253);
+			border-bottom:1px solid rgb(235,235,235);
+			position:relative;
+			position:fixed;
+			top:0;
+			left:0;
+			right:0;
+			z-index:102;
+			.input-safe {
+				width:78%;
+				height:80rpx;
+				padding:0 40rpx;
+				box-sizing:border-box;
+				font-size:32rpx;
+				background:rgba(235,235,235,.8);
+				border-radius:20rpx;
+				margin-left:5%;
+				vertical-align:middle;
+			}
+			.close-search {
+				height:40rpx;
+				line-height:40rpx;
+				position:absolute;
+				top:20rpx;
+				right:5%;
+				font-size:32rpx;
+				color:rgb(226,113,33);
+			}
+		}
+		.reacommend-nav-con {
+			width:100%;
+			height:600px;
+			box-sizing:border-box;
+			font-size:28rpx;
+			overflow:scroll;
+			padding-top:90rpx;
+			box-sizing:border-box;
+		}
+	}
+	.input-safe {
+		display:flex;
+		align-items:center;
+		.icon-search {
+			flex-shrink:0;
+			width:40rpx;
+			height:40rpx;
+			margin-top:10rpx;
+			margin-right:20rpx;
+		}
+		.ipt-true {
+			flex-shrink:0;
+			width:80%;
+			height:40rpx;
+			line-height:40rpx;
+			margin:10px 0;
+			.input-case {
+				width:100%;
+				height:40rpx;
+				line-height:40rpx;
+				text-indent:10rpx;
+			}
+		}
+	}
+	.reacommend-nav-con {
+		.nav-resultList {
+			width:100%;
+			height:600px;
+			overflow:scroll;
+			position:fixed;
+			top:170rpx;
+			left:0;
+			right:0;
+			padding:0 60rpx;
+			padding-bottom:260rpx;
+			box-sizing:border-box;
+			.rest-item {
+				width:100%;
+				height:80rpx;
+				line-height:80rpx;
+				padding-left:60rpx;
+				box-sizing:border-box;
+				position:relative;
+				.positionBefore {
+					width:40rpx;
+					height:40rpx;
+					line-height:40rpx;
+					text-align:center;
+					border-radius:10rpx;
+					background:rgb(230,230,230);
+					position:absolute;
+					left:10rpx;
+					top:20rpx;
+				}
+				.posActive {
+					color:rgb(235,235,235);
+					z-index:99;
+				}
+				.red {
+					background:rgb(225,45,20);
+				}
+				.qred {
+					background:rgb(252,115,1);
+				}
+				.orange {
+					background:rgb(255,182,2);
+				}
+				.positionRight {
+					width:36rpx;
+					height:20rpx;
+					text-align:center;
+					position:absolute;
+					right:10rpx;
+					top:5rpx;
+				}
+			}
+		}
+	}
+	.icon-pos-img {
+		width:100%;
+		height:36rpx;
+	}
+</style>
+
+<template>
+    <view class="search-container">
+    	<view class="search-session">
+    		<view class="input-cont">
+    			<view class="input-safe">
+    				<view class="icon-search"><image src="../../assets/icon/search-red.png" class="icon-imgresponse"/></view>
+    				<view class="ipt-true"><input type="text"  placeholder="请输入片名、主演或导演" class="input-case" @input="searchKey" /></view>
+    			</view>
+    			<view class="close-search" @tap="closeSearch">取消</view>
+    		</view>
+    		<view class="reacommend-nav-con">
+    			<HotTab :datas.sync='navBtnList' @chanegChanndId.user="chanegChanndId" />
+    			<view class="nav-resultList">
+    				<repeat
+    					for="{{deftTabList}}"
+    					key="{{index}}"
+    				>
+    					<view class="rest-item">
+    						<view class="positionBefore {{zero === index ? 'posActive red' : '' }}" wx:if="{{zero === index}}">{{item.position}}</view>
+    						<view class="positionBefore {{first === index ? 'posActive qred' : '' }}" wx:if="{{first === index}}">{{item.position}}</view>
+    						<view class="positionBefore {{second === index ? 'posActive orange' : '' }}" wx:if="{{second === index}}">{{item.position}}</view>
+    						<view class="positionBefore" wx:else>{{item.position}}</view>
+    						<view>{{item.title}}</view>
+    						<view class="positionRight" wx:if="{{item.changeOrder === 0}}">
+    							<image class="icon-pos-img" src="../../assets/icon/across.png" />
+    						</view>
+    						<view class="positionRight" wx:if="{{item.changeOrder === 1}}">
+    							<image class="icon-pos-img" src="../../assets/icon/up.png" />
+    						</view>
+    						<view class="positionRight" wx:if="{{item.changeOrder === -1}}">
+    							<image class="icon-pos-img" src="../../assets/icon/down.png" />
+    						</view>
+    					</view>
+    				</repeat>
+    			</view>
+    		</view>
+    	</view>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import {connect} from 'wepy-redux';
+    import {
+        getTimeSearchData,
+        getRecommendTabsData,
+        getAgainTabsData
+    } from '../../store/actions/counter.js';
+    import HotTab from './hotTabNav';
+
+    @connect({
+    	deftTabList(store) {
+    		return store.counter.deft_list
+    	},
+      	navBtnList(store) {
+      		return store.counter.rank_nav_list
+      	}
+    },{
+        getTimeSearchData,
+        getRecommendTabsData,
+        getAgainTabsData
+    })
+
+    export default class Index extends wepy.component {
+
+        props = {
+
+        };
+
+        data = {
+            deftKeyWord:'',	//搜索的key值
+            deftChanndId:"0",	//推荐的tab默认值
+            zero:0,
+            first:1,
+            second:2,
+        };
+
+        components = {
+			HotTab
+        };
+
+        methods = {
+			closeSearch:()=>{
+				this.$emit('closeSearch');
+			},
+			searchKey:(e)=>{
+				this.methods.getTimeSearchData("https://access.video.qq.com/tinyapp/search_smart?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3",e.detail.value);
+			},
+			chanegChanndId:(id)=>{
+				this.methods.getAgainTabsData("https://node.video.qq.com/x/api/hot_mobilesearch?channdlId="+id);
+			}
+        };
+
+        computed = {
+			keyWord() {
+                return `${this.deftKeyWord}`;
+            },
+            channdId() {
+            	return `${this.deftChanndId}`;
+            }
+        };
+
+        onLoad() {
+			this.methods.getTimeSearchData("https://access.video.qq.com/tinyapp/search_smart?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3",this.keyWord);
+			this.methods.getRecommendTabsData("https://node.video.qq.com/x/api/hot_mobilesearch?channdlId="+this.channdId);
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

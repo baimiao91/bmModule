@@ -1,0 +1,71 @@
+<style lang='less'>
+	.compont-container {
+		width:100%;
+		height:100%;
+		.allPrice {
+			padding-bottom:20rpx;
+		}
+	}
+</style>
+
+<template>
+    <view class="compont-container">
+    	<view
+    		class="allPrice"
+    		wx:if="{{datas.allPrice}}"
+    		style="text-align: center;"
+    	>
+    		<text style="color:rgb(179,179,179);">当前收入:</text>
+    		￥{{datas.allPrice}}
+    	</view>
+    	<repeat
+			for="{{deftArr}}"
+			key="{{index}}"
+    	>
+    		<WeekList :datas.sync="item"/>
+    	</repeat>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import WeekList from './weekLisy';
+
+    export default class Index extends wepy.component {
+
+        props = {
+        	datas:{
+        		type:Object,
+        		default:{}
+        	}
+        };
+
+        data = {
+            deftArr:[]
+        };
+
+        components = {
+			WeekList
+        };
+
+        methods = {
+
+        };
+
+        computed = {
+			deftArr() {
+				return this.deftArr = this.data.datas.childrenPrice;
+			}
+        };
+
+        onLoad() {
+            // console.log('content.wpy提现,this',this);
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>

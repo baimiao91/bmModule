@@ -1,0 +1,73 @@
+<style lang="less">
+    
+</style>
+
+<template>
+   	<view>{{titleTv}}</view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy'
+
+    export default class Example extends wepy.page {
+	
+		config = {
+			navigationBarTitleText:'腾讯视频'
+		};
+
+        data = {
+           	titleTv:''
+        };
+
+        components = {
+
+        };
+
+        methods = {
+
+        };
+
+		events = {
+
+		};
+
+		watch = {
+
+		};
+
+		computed = {
+
+		};
+
+        onLoad(options) {
+        	// console.log(,'options');
+            wepy.request({
+                url:'https://access.video.qq.com/tinyapp/video_detail?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3',
+                method:'POST',
+                header: {
+                    "content": "application/json"
+                },
+                dataType: "json",
+                responseType: "text",
+                data: {
+                    "cid":options.id
+                },
+                success:(res)=>{
+                    let data = res.data.slice(5);
+                    let dataTrue = JSON.parse(data);
+                    // console.log(dataTrue.data,'每一个详情返回');
+					// this.titleTv = dataTrue.data.introductionMap[options.id].poster.firstLine;
+					this.$apply();
+					// console.log(dataTrue.data.introductionMap[options.id]);
+                }
+            })
+        };
+
+        onShow() {
+
+        };
+
+    }
+
+</script>

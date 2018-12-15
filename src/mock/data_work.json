@@ -1,0 +1,97 @@
+{
+    "code": 1,
+    "data": {
+        "money": {
+            "allPrice": 1867,
+            "childrenPrice": [{
+                "name": "问答收入",
+                "price": 198,
+                "flag": true,
+                "datas": {
+                    "9月17号": [{
+                        "content": "王豆子向您支付服务费",
+                        "price": 68
+                    }, {
+                        "content": "臭豆腐向您支付服务费",
+                        "price": 68
+                    }],
+                    "9月16号": [{
+                        "content": "李豆子向您支付服务费",
+                        "price": 68
+                    }, {
+                        "content": "香豆腐向您支付服务费",
+                        "price": 68
+                    }]
+                }
+            }, {
+                "name": "偷听收入",
+                "price": 268,
+                "flag": true,
+                "datas": {
+                    "9月17号": [{
+                        "content": "王豆子向您支付服务费",
+                        "price": 68
+                    }, {
+                        "content": "臭豆腐向您支付服务费",
+                        "price": 68
+                    }],
+                    "9月16号": [{
+                        "content": "李豆子向您支付服务费",
+                        "price": 68
+                    }, {
+                        "content": "香豆腐向您支付服务费",
+                        "price": 68
+                    }]
+                }
+            }, {
+                "name": "资料库收入",
+                "price": 1268,
+                "flag": true,
+                "datas": {
+                    "9月17号": [{
+                        "content": "王豆子向您支付服务费",
+                        "price": 68
+                    }, {
+                        "content": "臭豆腐向您支付服务费",
+                        "price": 68
+                    }],
+                    "9月16号": [{
+                        "content": "李豆子向您支付服务费",
+                        "price": 68
+                    }, {
+                        "content": "香豆腐向您支付服务费",
+                        "price": 68
+                    }]
+                }
+            }]
+        },
+        "log": {
+            "18年12月3号": [{
+                "status": "完成",
+                "time": "5点20",
+                "price": 56
+            }, {
+                "status": "进行中",
+                "time": "2点20",
+                "price": 56
+            }, {
+                "status": "刚开始",
+                "time": "1点20",
+                "price": 56
+            }],
+            "18年11月2号": [{
+                "status": "完成",
+                "time": "5点20",
+                "price": 526
+            }, {
+                "status": "进行中",
+                "time": "2点20",
+                "price": 546
+            }, {
+                "status": "刚开始",
+                "time": "1点20",
+                "price": 516
+            }]
+        }
+    }
+}

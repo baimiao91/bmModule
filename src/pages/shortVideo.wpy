@@ -1,0 +1,172 @@
+<style lang="less">
+    .short-vid-container {
+        width:100%;
+        height:100%;
+        font-size:32rpx;
+        .topTab_con {
+            width:100%;
+            heigth:auto;
+            overflow:hidden;
+            padding:0 40rpx;
+            box-sizing:border-box;
+            background:rgb(255,255,255);
+            .scrollShortVid-container {
+                width:100%;
+                white-space:nowrap;
+            }
+        }
+        .list-wrapper {
+            width:100%;
+            overflow:hidden;
+        }
+    }
+    .list-item {
+        width:100%;
+        height:auto;
+        z-index:100;
+        .text-short-video {
+            padding:20rpx 30rpx;
+            overflow:hidden;
+            white-space:nowrap;
+            text-overflow:ellipsis;
+        }
+        .img-short-video {
+            width:100%;
+            height:auto;
+            position:relative;
+            .imgVideo {
+                width:100%;
+                height:430rpx;
+                display:block;
+            }
+            .shortVideo-rightInfo {
+                position:absolute;
+                right:20rpx;
+                bottom:20rpx;
+                color:rgb(255,255,255);
+                z-index:99;
+            }
+        }
+    }
+    .shortVideo-scroll {
+        width:100%;
+        height:8000rpx;
+        
+    }
+    ::-webkit-scrollbar {
+        width:0;
+        background:transparent;
+    }
+</style>
+
+<template>
+   	<view class="short-vid-container">
+        <scroll-view scroll-y @scroll="getShortVideoScroll" class="shortVideo-scroll">
+            <view class="topTab_con">
+                <scroll-view scroll-x class="scrollShortVid-container">
+                    <repeat
+                        for="{{tab_Data}}"
+                        key="{{index}}"
+                    >
+                        <TopTab :datas.sync="item" :ind.sync="index" :deftInd.sync="defaultInd"  @changeList.user="changeList" />
+                    </repeat>
+                </scroll-view>    
+            </view>
+            <view class="list-wrapper">
+                <view
+                    class="list-item"
+                    wx:for="{{tab_Data_list}}"
+                    wx:key="{{index}}"
+                >
+                    <view class="img-short-video">
+                        <image src="{{item.videoData.imageUrl}}" class="imgVideo" />
+                        <text class="shortVideo-rightInfo">{{item.videoData.duration}}</text>
+                    </view>
+                    <view class="text-short-video">{{item.videoData.title}}</view>
+                </view>
+            </view>
+        </scroll-view>    
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import {connect} from 'wepy-redux';
+    import {
+        getShortVideoTabData,
+        getShortVideoTabRestData
+    } from '../store/actions/counter.js';
+    import TopTab from '../components/shortVid/topTab';
+
+    @connect({
+        tab_Data(store) {
+            return store.counter.short_video_tab
+        },
+        tab_Data_list(store) {
+            return store.counter.short_video_tab_list
+        }
+    },{
+        getShortVideoTabData,
+        getShortVideoTabRestData
+    })
+
+    export default class Example extends wepy.page {
+        
+        config = {
+            enablePullDownRefresh:true
+        };
+
+        data = {
+           	defatChannelItemId:"110520",
+            defaultInd:0
+        };
+
+        components = {
+            TopTab
+        };
+
+        methods = {
+            getShortVideoScroll:(e)=>{
+                // console.log('短视频scroll',e);
+            },
+            changeList:(obj) => {
+                // console.log('传递回来的obj',obj);
+                this.defaultInd = obj.ind;
+                this.defatChannelItemId = obj.ItemId;
+                this.methods.getShortVideoTabRestData(`https://access.video.qq.com/tinyapp/hot_videoline?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3&channelItemId=${obj.ItemId}&pageContext=&refreshContext=&refreshType=0`);
+                this.$apply();
+            }
+        };
+
+		events = {
+
+		};
+
+		watch = {
+
+		};
+
+		computed = {
+            newChannelItemId() {
+                return `${this.defatChannelItemId}`
+            }
+		};
+
+        onLoad() {
+            this.methods.getShortVideoTabData('https://access.video.qq.com/tinyapp/hot_video_nav?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3');
+            this.methods.getShortVideoTabRestData(`https://access.video.qq.com/tinyapp/hot_videoline?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3&channelItemId=${this.newChannelItemId}&pageContext=&refreshContext=&refreshType=0`);
+            // console.log(this,'短视频this');
+        };
+
+        onShow() {
+
+        };
+
+        onReachBottom() {
+            console.log('短视频的下拉加载了');
+        }
+
+    }
+
+</script>

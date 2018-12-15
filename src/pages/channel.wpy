@@ -1,0 +1,65 @@
+<style lang="less">
+</style>
+
+<template>
+   	<view class="channel-container">
+        
+        频道
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy';
+    import { connect } from 'wepy-redux';
+    import {
+        getChannelData
+    } from '../store/actions/counter.js';
+
+    @connect({
+        
+    },{
+        getChannelData
+    })
+
+    export default class Example extends wepy.page {
+        
+        config = {
+        };
+
+        data = {
+        };
+
+        components = {
+
+        };
+
+        methods = {
+        };
+
+		events = {
+
+		};
+
+		computed = {
+            newChannelTime() {
+                return new Date()*1;
+            }
+		};
+
+        onLoad() {
+            /*this.methods.getChannelData(`https://access.video.qq.com/tinyapp/channel_data?vappid=65939066&vsecret=07c58e0c93150c4254a2a24131574b94cab6142ba4210efa&vversion_name=5.2.0.1234&vplatform=3&seqNum=4f91140e6b9384ea_${this.newChannelTime}_6a90&channelId=100113&modNum=10&pageContext=`);//数据有点小复杂*/
+           
+            
+        };
+
+        onShow() {
+
+        };
+
+        onReady() {
+        }
+
+    }
+
+</script>

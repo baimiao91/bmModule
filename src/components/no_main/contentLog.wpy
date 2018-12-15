@@ -1,0 +1,59 @@
+<style lang='less'>
+
+</style>
+
+<template>
+    <view>
+    	<view
+    		wx:for="{{newData}}"
+    		wx:key="{{index}}"
+    	>
+    		<view>{{index}}</view>
+    		<view>{{item}}</view>
+    	</view>
+    </view>
+</template>
+
+<script>
+    
+    import wepy from 'wepy'
+
+    export default class Index extends wepy.component {
+
+        props = {
+        	datas:{
+        		type:Object,
+        		default:{}
+        	},
+        	keys:{
+        		type:String
+        	}
+        };
+
+        data = {
+            
+        };
+
+        components = {
+
+        };
+
+        methods = {
+
+        };
+        computed = {
+        	newData() {
+        		return this.datas[this.keys]
+        	}
+        };
+
+        onLoad() {
+            // console.log('contentLog.wpy,this',this);
+        };
+
+        onShow() {
+
+        };
+    }
+
+</script>
